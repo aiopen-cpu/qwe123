@@ -189,7 +189,7 @@ else:
                 elif status_details.get("status") == "мороз":
                     status_text = " (Мороз ❄️)"
 
-                player_stats.append(f"{nickname} - {tickets}/{ticket_quota}{status_text}")
+                player_stats.append(f"{nickname} - {tickets}{status_text}")
 
             # Отображаем статистику как список
             for stat in player_stats:
