@@ -62,13 +62,20 @@ def save_statuses():
 # Преобразование SteamID64 в формат STEAM_1:X:Y
 def steamid64_to_steamid(steamid64):
     try:
+        steamid64 = int(steamid64)
         base_id = 76561197960265728
-        account_id = int(steamid64) - base_id
+        account_id = steamid64 - base_id
         y = account_id % 2
         z = account_id // 2
         return f"STEAM_1:{y}:{z}"
-    except ValueError:
+    except (ValueError, TypeError):
         return None
+
+# Функция для корректировки формата STEAM_0:X:Y на STEAM_1:X:Y
+def fix_steamid_format(steamid):
+    if steamid.startswith("STEAM_0:"):
+        return steamid.replace("STEAM_0:", "STEAM_1:", 1)
+    return steamid
 
 # Проверка и удаление статусов по дате окончания
 def check_and_clean_statuses():
@@ -241,7 +248,15 @@ else:
 
         if st.button("Добавить игрока", key="add_player_button"):
             if new_steam_id and new_nickname and new_discord and new_supervisor:
-                formatted_id = steamid64_to_steamid(new_steam_id)
+                # Проверяем, если введён SteamID64, то конвертируем его в STEAM_1:X:Y
+                if new_steam_id.startswith("STEAM_1:"):
+                    formatted_id = new_steam_id
+                else:
+                    formatted_id = steamid64_to_steamid(new_steam_id)
+                    if not formatted_id:
+                        # Если это не SteamID64, проверяем на формат STEAM_0:X:Y
+                        formatted_id = fix_steamid_format(new_steam_id)
+
                 if not formatted_id:
                     st.error("Некорректный SteamID.")
                 elif formatted_id not in steam_id_to_name_supervisor:
