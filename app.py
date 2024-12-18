@@ -220,7 +220,9 @@ else:
                     report_lines.append(f"@{discord} - Мороз ❄️")
                 else:
                     if day_choice == "Воскресенье":
-                        if tickets >= 60:
+                        if tickets >= 100:
+                            status = "[отыграл норму] 🔥"
+                        elif tickets >= 60:
                             status = "[отыграл норму] ✅"
                         elif 50 <= tickets < 60:
                             status = "[ничего не делаем] ✅"
@@ -231,8 +233,6 @@ else:
                         else:
                             status = "[инактив, причину в ЛС] ❌"
                         report_lines.append(f"@{discord} - {tickets} тикетов {status}")
-                    else:
-                        report_lines.append(f"@{discord} - {tickets} тикетов")
 
             # Отображаем отчет
             report_text = "\n".join(report_lines)
